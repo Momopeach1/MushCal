@@ -1,6 +1,6 @@
 // NAME = (I)tem,(T)ier,(L)ine,(C)ube
-// Weapon, Emblem, Secondary, Hat, Top/Overall, Bot, Shoe, Shoulder/Cape, Glove, Belt, Accesory , Heart
-// W, E, S, H
+// Weapon, Emblem, Secondary, Hat, Top/Overall, Pants, Shoe, Shoulder/Cape, Glove, Belt, Accesory , Heart
+// W, E, S, H, T, P
 //Stat = Str, Dex, Int, Luk
 //Att = Att, MAtt
 //Trash = {}
@@ -230,7 +230,30 @@ var TL3R = {
     'Trash'    : .54489,    //9.0000% + 6.0000% *7 + 3.0000% + 0.0889% *2 + 0.0667% * 4 + 0.0444%
 }
 
-var BL1R = {
-    
+var PL1R = {
+    'Stat12'   : .102564, //10.2564%
+    'HP12'     : .102564, 
+    'AllStat9' : .076923, //7.6923%
+    'Trash'    : .410256,  //10.2564% *2 + 7.6923% *2 + 5.1282%
 }
 
+var PL2R = { //remath
+    'Stat9'    : .080357,  //8.0357%
+    'HP9'      : .096429,  //9.6429%
+    'AllStat6' : .064286,  //6.4286%
+
+    'Stat12'   : .0102564, //1.0256%
+    'HP12'     : .0102564, 
+    'AllStat9' : .0076923, //0.7692%
+    'Trash'    : .458883, //9.6429% + 6.4286% *5 + 1.0256% *2 + 0.7692% *2 + 0.5128%
+}
+var PL3R = { //fix here
+    'Stat9'    : .080357,  //8.0357%
+    'HP9'      : .096429,  //9.6429%
+    'AllStat6' : .064286,  //6.4286%
+
+    'Stat12'   : .010256, //1.0256%
+    'HP12'     : .010256, 
+    'AllStat9' : .007692, //0.7692%
+    'Trash'    : .458883, //9.6429%
+}
