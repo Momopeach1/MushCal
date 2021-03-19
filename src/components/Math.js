@@ -3,7 +3,25 @@
 // W, E, S, H, T, P
 //Stat = Str, Dex, Int, Luk
 //Att = Att, MAtt
-//Trash = {}
+/* Trash = {
+    2%/4% chance of being invincible for 7 seconds when hit
+    5%/10% chance to ignore 20%/40% of damage when hit
+    30% chance to reflect 50%/70% of damage taken
+    Abnormal State Resist: +10
+    All skill levels: +2/+3
+    Att/Matt per 10 levels per character: +1
+    Cooldown time of all skills: -1s/-2s
+    <Decent Advanced Blessing> skill available
+    <Decent Combat Orders> skill available
+    <Decent Hyper Body> skill available
+    <Decent Mystic Door> skill available
+    Defense: +12%/9%
+    HP recovery item and recovery skill efficiency: +30%
+    Invincibility time after being hit: +2/+3 seconds
+    Max MP: +12%/9%
+    Resist all attributes: +10% 
+
+} */
 
 //some totals are off between 2x 10^-7 and 5x 10^-7
 
