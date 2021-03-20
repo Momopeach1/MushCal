@@ -1,6 +1,6 @@
 // NAME = (I)tem,(T)ier,(L)ine,(C)ube
-// Weapon, Emblem, Secondary, Hat, Top/Overall, Pants, Shoe, Shoulder/Cape, Glove, Belt, Accesory , Heart
-// W, E, S, H, T, P
+// Weapon, Emblem, Secondary, Hat, Top/Overall, Pants, Shoe, Glove, Shoulder/Cape, Belt, Accesory , Heart
+// W,      E,      S,         H,   T,           P,     F,    G,     C
 //Stat = Str, Dex, Int, Luk
 //Att = Att, MAtt
 /* Trash = {
@@ -15,6 +15,9 @@
     <Decent Combat Orders> skill available
     <Decent Hyper Body> skill available
     <Decent Mystic Door> skill available
+    <Decent Sharp Eyes> skill available
+    <Decent Speed Infusion> skill available  haste???
+    <Useful Wind Booster> skill available    ???
     Defense: +12%/9%
     HP recovery item and recovery skill efficiency: +30%
     Invincibility time after being hit: +2/+3 seconds
@@ -25,6 +28,7 @@
 
 //some totals are off between 2x 10^-7 and 5x 10^-7
 
+//weapon
 var WL1R = {
     'Stat12'   : .097561, //9.7561%
     'ATT12'    : .048780, //4.8780%
@@ -85,6 +89,7 @@ var WL3R = {
     'Trash'    : .00097560, //0.0488% x2
 }
 
+//emblem
 var EL1R = {
     'Stat12'   : .114286, //11.4286%
     'ATT12'    : .057143, //5.7143%
@@ -132,6 +137,7 @@ var EL3R = {
     'Trash'    : .00114286, //0.0571% x2
 }
 
+//secondary/shield
 var SL1R = {
     'Stat12'   : .085106, //8.5106%
     'ATT12'    : .042553, //4.2553%
@@ -192,6 +198,7 @@ var SL3R = {
     'Trash'    : .15156166, //7.4717% x2 + 0.0426% x2 + 0.0638% x2
 }
 
+//hat
 var HL1R = {
     'Stat12'   : .08, //8.0000%
     'HP12'     : .08, 
@@ -221,6 +228,7 @@ var HL3R = {
     'Trash'    : .516367, //9.5806% + 6.3871% *6 + 3.1935% + 0.0800% *2 + 0.0600% *5 + 0.0400% *2
 }
 
+//top/overall
 var TL1R = {
     'Stat12'   : .088889, //8.8889%
     'HP12'     : .088889, 
@@ -250,6 +258,7 @@ var TL3R = {
     'Trash'    : .5448889,  //9.0000% + 6.0000% *7 + 3.0000% + .088889% *2 + .066667% * 4 + .044444%
 }
 
+//pants
 var PL1R = {
     'Stat12'   : .102564, //10.2564%
     'HP12'     : .102564, 
@@ -277,4 +286,97 @@ var PL3R = {
     'HP12'     : .00102564, 
     'AllStat9' : .00076923, //0.0769%
     'Trash'    : .46374356, //10.6071% + 7.0714%*5 + 0.102564% *2 + 0.076923% *2 + 0.051282%
+}
+
+//feet/shoe
+var FL1R = {
+    'Stat12'   : .10,  //10.0%
+    'HP12'     : .10, 
+    'AllStat9' : .075, //7.6923%
+    'Trash'    : .425, //10% *2 + 7.5% *3
+}
+
+var FL2R = {
+    'Stat9'    : .080357,  //8.0357%
+    'HP9'      : .096429,  //9.6429%
+    'AllStat6' : .064286,  //6.4286%
+
+    'Stat12'   : .010,     //1.0%
+    'HP12'     : .010, 
+    'AllStat9' : .0075,    //.75%
+    'Trash'    : .460359,  //9.6429% + 6.4286% *5 + 1% *2 + .75% *3
+}
+
+var FL3R = {
+    'Stat9'    : .088393,  //8.8393%
+    'HP9'      : .106071,  //10.6071%
+    'AllStat6' : .070714,  //7.0714%
+
+    'Stat12'   : .0010,    //.10%
+    'HP12'     : .0010, 
+    'AllStat9' : .00075,   //.075%
+    'Trash'    : .463891,  //10.6071% + 7.0714% *5 + .1% *2 + .075% *3
+}
+
+//glove
+var GL1R = {
+    'Stat12'   : .090909, //9.0909%	
+    'HP12'     : .090909, 
+    'Cdmg8'    : .090909, //4.5455% *2
+    'AllStat9' : .068182, //6.8182%
+    'Trash'    : .386364, //9.0909% *2 + 6.8182% *3
+}
+
+var GL2R = {
+    'Stat9'    : .075, //7.5%
+    'HP9'      : .09,  //9.0%
+    'AllStat6' : .06,  //6.0%
+
+    'Stat12'   : .0090909, //.90909%	
+    'HP12'     : .0090909, 
+    'Cdmg8'    : .0090909, //.45455% *2
+    'AllStat9' : .0068182, //.68182%
+    'Trash'    : .4886364, //9% + 6% *5 + 1.5% *4 + 0.90909% *2 + 0.68182%	*3
+}
+
+var GL3R = {
+    'Stat9'    : .0825, //8.2500%
+    'HP9'      : .099,  //9.9000%
+    'AllStat6' : .066,  //6.6000%
+
+    'Stat12'   : .00090909, //.090909%	
+    'HP12'     : .00090909, 
+    'Cdmg8'    : .00090909, //.045455% *2
+    'AllStat9' : .00068182, //.068182%
+    'Trash'    : .49886364, //9.9% + 6.6% *5 + 1.65% *4 + .090909% *2 + .068182% *3
+}
+
+//shoulder/cape
+var CL1R = {
+    'Stat12'   : .108108,  //10.8108%
+    'HP12'     : .108108, 
+    'AllStat9' : .081081, //8.1081%
+    'Trash'    : .378378, //10.8108% *2 + 8.1081% *2
+}
+
+var CL2R = {
+    'Stat9'    : .086538,  //8.6538%
+    'HP9'      : .103846,  //10.3846%
+    'AllStat6' : .069231,  //6.9231%
+
+    'Stat12'   : .0108108, //1.08108%
+    'HP12'     : .0108108, 
+    'AllStat9' : .0081081, //.81081%
+    'Trash'    : .4186078, //10.3846% + 6.9231% *4 + 1.08108% *2 + 0.81081% *2
+}
+
+var CL3R = {
+    'Stat9'    : .095192,   //9.5192%
+    'HP9'      : .114231,   //11.4231%
+    'AllStat6' : .076154,   //7.6154%
+
+    'Stat12'   : .00108108, //.108108%
+    'HP12'     : .00108108, 
+    'AllStat9' : .00081081, //.081081%
+    'Trash'    : .42263078, //11.4231% + 7.6154% *4 + .108108% *2 + .081081% *2
 }
