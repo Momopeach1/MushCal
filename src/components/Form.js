@@ -59,6 +59,138 @@ const Form = () => {
             console.log(data[weightedRandom(weights)][0]);
         }
     }
+    const statItems = new Set([
+        "C0",  //belt,
+        "P0",  //bottom,
+        "C1",  //cape,
+        "H0",  //hat,
+        "He0", //heart,
+        "T0",  //overall,
+        "F0",  //shoes,
+        "C2",  //shoulder,
+        "T1",  //top,
+    ])
+
+    const baseLines = [
+        "21S", "24S","27S","30S","33S","36S",
+        "15AS", "18AS", "21AS", "24AS", "27AS",
+    ]
+
+    const HPLines = [
+        "21HP", "24HP","27HP","30HP","33HP","36HP",
+    ]
+
+    const WSLines = [
+        "1A2B", "2A", "2A1B", "2A1I", "3A",
+    ]
+
+    const ELines = [
+        "2A", "2A1I", "3A",
+    ]
+
+    const GLines = [
+        "1C", "1C1S", "1C1AS", "1C1HP",
+        "1C2S", "1C2AS", "1C2HP",
+        "2C1S", "2C2AS", "2C2HP",
+    ]
+
+    const renderBaseLines = () => 
+        baseLines.map(baseLine => {
+            const value = baseLine.substring(0, 2);
+            const suffix = baseLine.substring(2) === 'S'? 'Stat%' : 'Allstat%';
+            const content = value + ' ' + suffix;
+            return <MenuItem 
+                    key = {baseLine} 
+                    value={baseLine}
+                >
+                    {content}
+                </MenuItem>
+        })
+
+    const renderHPLines = () => 
+        HPLines.map(HPLine => {
+            const value = HPLine.substring(0, 2);
+            const suffix = 'HP%';
+            const content = value + ' ' + suffix;
+            return <MenuItem 
+                key = {HPLine} 
+                value={HPLine}
+            >
+                {content}
+            </MenuItem>
+        })
+
+    const renderWSLines = () => 
+        WSLines.map(WSLine => {
+            const primeValue     = WSLine[0]
+            const primeName      = 'Line ATT%'
+            const secondaryValue = WSLine[2]
+            const secondaryName  = WSLine[3] && WSLine[3] === 'B' ? 'Line Boss%' : 'Line IED%';
+            const content = secondaryValue === undefined ? 
+                primeValue + primeName:
+                primeValue + primeName + ' ' + secondaryValue + secondaryName
+                
+            return <MenuItem 
+                key = {WSLine} 
+                value={WSLine}
+            >
+                {content}
+            </MenuItem>
+        }) 
+    
+    const renderELines = () => 
+        ELines.map(ELine => {
+            const primeValue     = ELine[0];
+            const primeName      = 'Line ATT%';
+            const secondaryValue = ELine[2];
+            const secondaryName  = 'Line IED%';
+            const content = secondaryValue === undefined ? 
+                primeValue + primeName:
+                primeValue + primeName + ' ' + secondaryValue + secondaryName
+                
+            return <MenuItem 
+                key = {ELine} 
+                value={ELine}
+            >
+                {content}
+            </MenuItem>
+        }) 
+
+    const renderGLines = () => 
+        GLines.map(GLine => {
+            const primeValue     = GLine[0];
+            const primeName      = 'Line Crit DMG%';
+            const secondaryValue = GLine[2];
+            const secondaryName  = GLine[3];
+            let content = '';
+            if(secondaryValue === undefined)
+                content = primeValue + primeName;
+            else if(secondaryName === 'S')
+                content = primeValue + primeName + ' ' + secondaryValue + 'Line Stat%'
+            else if(secondaryName === 'A')
+                content = primeValue + primeName + ' ' + secondaryValue + 'Line Allstat%'
+            else if(secondaryName === 'H')
+                content = primeValue + primeName + ' ' + secondaryValue + 'Line HP%'
+                
+            return <MenuItem 
+                key = {GLine} 
+                value={GLine}
+            >
+                {content}
+            </MenuItem>
+    }) 
+        
+    const renderLineOptions = () => {
+        if(statItems.has(form[ITEM])) {
+            return renderBaseLines().concat(renderHPLines());
+        }else if(form[ITEM] === "W0" || form[ITEM] === "S0" || form[ITEM] === "S1"){
+            return renderBaseLines().concat(renderWSLines());
+        }else if(form[ITEM] === "E0"){
+            return renderBaseLines().concat(renderELines());
+        }else if(form[ITEM] === "G0"){
+            return renderBaseLines().concat(renderGLines());   
+        } //some default value
+    }
 
     const onItemChange = e => 
         setForm({ ...form, [e.target.name]: e.target.value })
@@ -142,9 +274,7 @@ const Form = () => {
                         value={form[LINES]}
                         onChange={onItemChange}
                     >
-                        <MenuItem value=""><em>--select--</em></MenuItem>
-                        <MenuItem value="A0">Any(tier up)</MenuItem>
-                        
+                        {renderLineOptions()}
                     </Select>
                 </FormControl>
                 <input type="submit" />
@@ -158,3 +288,128 @@ const Form = () => {
 }
 
 export default Form;
+
+/*
+    drop down menus
+    21 stat
+    24 stat
+    27 stat
+    30 stat
+    33 stat
+    36 stat
+    15 AllStat
+    18 AllStat
+    21 AllStat
+    24 AllStat
+    27 AllStat
+
+    meso stat //same
+    drop stat
+
+    meso AllStat //same
+    drop AllStat
+
+    meso meso //same
+    drop drop
+    meso drop
+
+    meso meso stat //same 
+    drop drop stat
+    meso drop stat
+
+    meso meso AllStat //same
+    meso drop AllStat
+    drop drop AllStat
+
+    meso meso drop //same
+    meso drop drop
+
+    //WS
+    att bdmg bdmg 
+
+    att att
+    att att bdmg 
+    att att ied
+
+    att att att
+    
+    //E
+    att ied ied
+    att att
+    att att ied
+    att att att
+    
+*/
+
+
+/* Math permutations 
+ stat/ all lines
+
+   belt       21 = 12 + 9           15 = 9 + 6
+   bot        24 = 12 + 12          18 = 9 + 9 / 6 + 6 + 6
+   cape       27 = 9 + 9 + 9        21 = 9 + 6 + 6
+   hat        30 = 12 + 9 + 9       24 = 9 + 9 + 6
+   heart      33 = 12 + 12 +9       27 = 9 + 9 + 9
+   overall    36 = 12 + 12 + 12
+   shoes
+   shoulder
+   top
+
+   Accessory
+   
+   meso stat/all
+   drop stat/all
+   meso meso
+   drop drop
+   meso drop / drop meso
+   meso drop stat/all
+   meso meso stat/all
+   drop drop stat/all
+   meso meso drop
+   meso drop drop
+
+   WSE (emblem doesnt have bdmg)
+   
+   att
+   18 = 9 + 9
+   21 = 12 + 9
+   24 = 12 + 12
+   27 = 9 + 9 + 9
+   30 = 12 + 9 + 9
+   33 = 12 + 12 + 9
+   36 = 12 + 12 + 12
+   
+   --EMBLEM DONT HAVE BDMG--
+   2att + boss
+   18 = 9 + 9 + 20BDMG
+   18 = 9 + 9 + 30BDMG
+   18 = 9 + 9 + 35BDMG
+   18 = 9 + 9 + 40BDMG
+
+   21 = 12 + 9 + 20BDMG
+   21 = 12 + 9 + 30BDMG
+   21 = 12 + 9 + 35BDMG
+   21 = 12 + 9 + 40BDMG
+
+   24 = 12 + 12 + 20BDMG
+   24 = 12 + 12 + 30BDMG
+   24 = 12 + 12 + 35BDMG
+   24 = 12 + 12 + 40BDMG
+
+   2att + ied
+   18 = 9 + 9 + 35IED
+   18 = 9 + 9 + 40IED
+
+   21 = 12 + 9 + 35IED
+   21 = 12 + 9 + 40IED
+
+   24 = 12 + 12 + 35IED
+   24 = 12 + 12 + 40IED
+
+
+   //interchangable specific lines
+   att12
+   att12
+   ied
+*/
+
