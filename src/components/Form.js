@@ -5,286 +5,352 @@ import { useState } from 'react';
 import weightedRandom from 'weighted-random';
 import math from './Math';
 
-
 const Form = () => {
-    const ITEM = 'item';
-    const CTIER = 'ctier';
-    const CUBE = 'cube';
-    const DTIER = 'dtier';
-    const LINES = 'lines';
+  const ITEM = 'item';
+  const CTIER = 'ctier';
+  const CUBE = 'cube';
+  const DTIER = 'dtier';
+  const LINES = 'lines';
 
-    const [form, setForm] = useState({
-        [ITEM]: "",
-        [CTIER]: "",
-        [CUBE]: "",
-        [DTIER]: "",
-        [LINES]: "",
-    });
+  const [form, setForm] = useState({
+    [ITEM]: "",
+    [CTIER]: "",
+    [CUBE]: "",
+    [DTIER]: "",
+    [LINES]: "",
+  });
 
-    const [results, setResults] = useState({
-        cubeCount: 0,
-    });
+  const [results, setResults] = useState({
+    cubeCount: 0,
+  });
 
-    const tierMap = {
-        R : 'E',
-        E : 'U',
-        U : 'L',
+  const tierMap = {
+    R : 'E',
+    E : 'U',
+    U : 'L',
+  }
+
+  const onFormSubmit = e => {
+    e.preventDefault();
+
+    setResults( ({cubeCount}) => ({cubeCount: 0}) )
+    const itemCategory = form[ITEM].substring(0, form[ITEM].length - 1);
+    const cTierCategory = form[CTIER]; 
+    const cubeCategory = form[CUBE];
+
+    const dTierCategory = form[DTIER];
+
+    //tier up
+    for (let tier = cTierCategory; tier !== 'L' && tier !== dTierCategory; ) {
+      const key = cubeCategory + 'tier';
+      if (Math.random() < math[key][tierMap[cTierCategory]]) {
+        tier = tierMap[tier];
+      }
+      setResults( ({cubeCount}) => ({cubeCount: cubeCount+1}) )
     }
 
-    const onFormSubmit = e => {
-        e.preventDefault();
 
-        setResults( ({cubeCount}) => ({cubeCount: 0}) )
-        const itemCategory = form[ITEM].substring(0, form[ITEM].length - 1);
-        const cTierCategory = form[CTIER]; 
-        const cubeCategory = form[CUBE];
+    for (let line = 1; cTierCategory === 'L' && line <= 3; ++line) {
+      const equipStats = itemCategory + cTierCategory + line + cubeCategory;
+      const data = Object.entries(math[equipStats])
+      const weights = data.map(d => d[1]);
 
-        const dTierCategory = form[DTIER];
-
-        //tier up
-        for (let tier = cTierCategory; tier !== 'L' && tier !== dTierCategory; ) {
-            const key = cubeCategory + 'tier';
-            if (Math.random() < math[key][tierMap[cTierCategory]]) {
-                tier = tierMap[tier];
-            }
-            setResults( ({cubeCount}) => ({cubeCount: cubeCount+1}) )
-        }
-
-
-        for (let line = 1; cTierCategory === 'L' && line <= 3; ++line) {
-            const equipStats = itemCategory + cTierCategory + line + cubeCategory;
-            const data = Object.entries(math[equipStats])
-            const weights = data.map(d => d[1]);
-
-            console.log(data[weightedRandom(weights)][0]);
-        }
+      console.log(data[weightedRandom(weights)][0]);
     }
-    const statItems = new Set([
-        "C0",  //belt,
-        "P0",  //bottom,
-        "C1",  //cape,
-        "H0",  //hat,
-        "He0", //heart,
-        "T0",  //overall,
-        "F0",  //shoes,
-        "C2",  //shoulder,
-        "T1",  //top,
-    ])
+  }
 
-    const baseLines = [
-        "21S", "24S","27S","30S","33S","36S",
-        "15AS", "18AS", "21AS", "24AS", "27AS",
-    ]
+  const statItems = new Set([
+    "C0",  //belt,
+    "P0",  //bottom,
+    "C1",  //cape,
+    "H0",  //hat,
+    "He0", //heart,
+    "T0",  //overall,
+    "F0",  //shoes,
+    "C2",  //shoulder,
+    "T1",  //top,
+  ])
 
-    const HPLines = [
-        "21HP", "24HP","27HP","30HP","33HP","36HP",
-    ]
+  const baseLines = [
+    "21S", "24S", "27S", "30S", "33S","36S",
+    "15s", "18s", "21s", "24s", "27s",
+  ]
 
-    const WSLines = [
-        "1A2B", "2A", "2A1B", "2A1I", "3A",
-    ]
+  const HPLines = [
+    "21H", "24H","27H","30H","33H","36H",
+  ]
 
-    const ELines = [
-        "2A", "2A1I", "3A",
-    ]
+  const WSLines = [
+    "1A2B", "2A", "2A1B", "2A1I", "3A",
+  ]
 
-    const GLines = [
-        "1C", "1C1S", "1C1AS", "1C1HP",
-        "1C2S", "1C2AS", "1C2HP",
-        "2C1S", "2C2AS", "2C2HP",
-    ]
+  const ELines = [
+    "2A", "2A1I", "3A",
+  ]
 
-    const renderBaseLines = () => 
-        baseLines.map(baseLine => {
-            const value = baseLine.substring(0, 2);
-            const suffix = baseLine.substring(2) === 'S'? 'Stat%' : 'Allstat%';
-            const content = value + ' ' + suffix;
-            return <MenuItem 
-                    key = {baseLine} 
-                    value={baseLine}
-                >
-                    {content}
-                </MenuItem>
-        })
+  const GLines = [
+    "1C",    
+    "1C1S", "1C1s", "1C1H",
+    "1C2S", "1C2s", "1C2H",
+    "2C1S", "2C2s", "2C2H",
+  ]
 
-    const renderHPLines = () => 
-        HPLines.map(HPLine => {
-            const value = HPLine.substring(0, 2);
-            const suffix = 'HP%';
-            const content = value + ' ' + suffix;
-            return <MenuItem 
-                key = {HPLine} 
-                value={HPLine}
-            >
-                {content}
-            </MenuItem>
-        })
+  const ALines = [//paired by same chance
+    "1M",   "1D", 
+    "1M1S", "1D1S",
+    "1M1s", "1D1s",
+    "1M1H", "1D1H",
 
-    const renderWSLines = () => 
-        WSLines.map(WSLine => {
-            const primeValue     = WSLine[0]
-            const primeName      = 'Line ATT%'
-            const secondaryValue = WSLine[2]
-            const secondaryName  = WSLine[3] && WSLine[3] === 'B' ? 'Line Boss%' : 'Line IED%';
-            const content = secondaryValue === undefined ? 
-                primeValue + primeName:
-                primeValue + primeName + ' ' + secondaryValue + secondaryName
-                
-            return <MenuItem 
-                key = {WSLine} 
-                value={WSLine}
-            >
-                {content}
-            </MenuItem>
-        }) 
-    
-    const renderELines = () => 
-        ELines.map(ELine => {
-            const primeValue     = ELine[0];
-            const primeName      = 'Line ATT%';
-            const secondaryValue = ELine[2];
-            const secondaryName  = 'Line IED%';
-            const content = secondaryValue === undefined ? 
-                primeValue + primeName:
-                primeValue + primeName + ' ' + secondaryValue + secondaryName
-                
-            return <MenuItem 
-                key = {ELine} 
-                value={ELine}
-            >
-                {content}
-            </MenuItem>
-        }) 
+    "2M",     "2D",     "1M1D", 
+    "2M1S",   "2M1s",   "2M1H",
+    "2D1S",   "2D1s",   "2D1H",
+    "1M1D1S", "1M1D1s", "1M1D1H",
 
-    const renderGLines = () => 
-        GLines.map(GLine => {
-            const primeValue     = GLine[0];
-            const primeName      = 'Line Crit DMG%';
-            const secondaryValue = GLine[2];
-            const secondaryName  = GLine[3];
-            let content = '';
-            if(secondaryValue === undefined)
-                content = primeValue + primeName;
-            else if(secondaryName === 'S')
-                content = primeValue + primeName + ' ' + secondaryValue + 'Line Stat%'
-            else if(secondaryName === 'A')
-                content = primeValue + primeName + ' ' + secondaryValue + 'Line Allstat%'
-            else if(secondaryName === 'H')
-                content = primeValue + primeName + ' ' + secondaryValue + 'Line HP%'
-                
-            return <MenuItem 
-                key = {GLine} 
-                value={GLine}
-            >
-                {content}
-            </MenuItem>
-    }) 
+    "2M1D", "2D1M", 
+  ]
+
+  const lineDecoder = {
+    'S'  : 'Stat%',
+    's'  : 'Allstat%',
+    'H'  : 'HP%',
+    'B'  : 'Line Boss%',
+    'A'  : 'Line ATT%',
+    'I'  : 'Line IED%',
+    'C'  : 'Line Crit DMG%',
+    'M'  : 'Line Meso',
+    'D'  : 'Line Drop',
+  }
+
+  const renderBaseLines = () => 
+    baseLines.map(baseLine => {
+      const value = baseLine.substring(0, 2);
+      const suffix = lineDecoder[baseLine.substring(2)];
+      const content = value + ' ' + suffix;
+      return <MenuItem 
+        key = {baseLine} 
+        value={baseLine}
+      >
+        {content}
+      </MenuItem>
+    })
+
+  const renderHPLines = () => 
+    HPLines.map(HPLine => {
+      const value = HPLine.substring(0, 2);
+      const suffix = 'HP%';
+      const content = value + ' ' + suffix;
+      return <MenuItem 
+        key = {HPLine} 
+        value={HPLine}
+      >
+        {content}
+      </MenuItem>
+    })
+
+  const renderWSLines = () =>
+    WSLines.map(WSLine => {
+      const primeValue     = WSLine[0]
+      const primeName      = 'Line ATT%'
+      const secondaryValue = WSLine[2]
+      const secondaryName  = lineDecoder[WSLine[3]]
+      const content = secondaryValue === undefined ? 
+        primeValue + primeName:
+        primeValue + primeName + ' + ' + secondaryValue + secondaryName
         
-    const renderLineOptions = () => {
-        if(statItems.has(form[ITEM])) {
-            return renderBaseLines().concat(renderHPLines());
-        }else if(form[ITEM] === "W0" || form[ITEM] === "S0" || form[ITEM] === "S1"){
-            return renderBaseLines().concat(renderWSLines());
-        }else if(form[ITEM] === "E0"){
-            return renderBaseLines().concat(renderELines());
-        }else if(form[ITEM] === "G0"){
-            return renderBaseLines().concat(renderGLines());   
-        } //some default value
-    }
+      return <MenuItem 
+        key = {WSLine} 
+        value={WSLine}
+      >
+        {content}
+      </MenuItem>
+    }) 
+    
+  const renderELines = () => 
+    ELines.map(ELine => {
+      const primeValue     = ELine[0];
+      const primeName      = 'Line ATT%';
+      const secondaryValue = ELine[2];
+      const secondaryName  = 'Line IED%';
+      const content = secondaryValue === undefined ? 
+        primeValue + primeName:
+        primeValue + primeName + ' + ' + secondaryValue + secondaryName
+          
+      return <MenuItem 
+        key = {ELine} 
+        value={ELine}
+      >
+        {content}
+      </MenuItem>
+    }) 
 
-    const onItemChange = e => 
-        setForm({ ...form, [e.target.name]: e.target.value })
+  const renderGLines = () => 
+    GLines.map(GLine => {
+      const primeValue     = GLine[0];
+      const primeName      = 'Line Crit DMG%';
+      const secondaryValue = GLine[2];
+      const secondaryName  = lineDecoder[GLine[3]];
+      let content = primeValue + primeName;;
+      if(secondaryValue !== undefined)
+        content += ' + ' + secondaryValue + secondaryName
 
-    return (
-        <div>
-            <form onSubmit={onFormSubmit}>
-                <FormControl variant="outlined">
-                    <Select 
-                        name={ITEM}
-                        id="Item dropdown" //for override css
-                        value={form[ITEM]}
-                        onChange={onItemChange}
-                    >
-                        <MenuItem value=""><em>--select--</em></MenuItem>
-                        <MenuItem value="A0">Accessory</MenuItem>
-                        <MenuItem value="C0">Belt</MenuItem>
-                        <MenuItem value="P0">Bottom</MenuItem>
-                        <MenuItem value="C1">Cape</MenuItem>
-                        <MenuItem value="E0">Emblem</MenuItem>
-                        <MenuItem value="G0">Glove</MenuItem>
-                        <MenuItem value="H0">Hat</MenuItem>
-                        <MenuItem value="He0">Heart</MenuItem>
-                        <MenuItem value="T0">Overall</MenuItem>
-                        <MenuItem value="T1">Top</MenuItem>
-                        <MenuItem value="S0">Secondary</MenuItem>
-                        <MenuItem value="S1">Shield</MenuItem>
-                        <MenuItem value="F0">Shoes</MenuItem>
-                        <MenuItem value="C2">Shoulder</MenuItem>
-                        <MenuItem value="W0">Weapon</MenuItem>
-                    </Select>
-                </FormControl>
+      return <MenuItem 
+        key = {GLine} 
+        value={GLine}
+      >
+        {content}
+      </MenuItem>
+  }) 
 
-                <FormControl variant="outlined">
-                    <Select 
-                        name={CTIER}
-                        id="Tier dropdown" //for override css
-                        value={form[CTIER]}
-                        onChange={onItemChange}
-                    >
-                        <MenuItem value=""><em>--select--</em></MenuItem>
-                        <MenuItem value="R">Rare</MenuItem>
-                        <MenuItem value="E">Epic</MenuItem>
-                        <MenuItem value="U">Unique</MenuItem>
-                        <MenuItem value="L">Legendary</MenuItem>
-                    </Select>
-                </FormControl>
+  const renderALines = () => 
+    ALines.map(ALine => {
+      const primeValue     = ALine[0];
+      const primeName      = lineDecoder[ALine[1]]
+      const secondaryValue = ALine[2]
+      const secondaryName  = lineDecoder[ALine[3]]; //SAHDM
+      const tertiaryValue  = ALine[4]
+      const tertiaryName   = lineDecoder[ALine[5]];
+      let content = primeValue + primeName;
 
-                <FormControl variant="outlined">
-                    <Select 
-                        name={CUBE}
-                        id="Cube dropdown" //for override css
-                        value={form[CUBE]}
-                        onChange={onItemChange}
-                    >
-                        <MenuItem value=""><em>--select--</em></MenuItem>
-                        <MenuItem value="R">Red</MenuItem>
-                        <MenuItem value="B">Black</MenuItem>
-                    </Select>
-                </FormControl>
+      //1M1D1S", "1M1D1A", "1M1D1H"
+      if(secondaryValue !== undefined){
+        if(secondaryName === 'S')
+          secondaryName = 'Stat%'
+        else if(secondaryName === 'A')
+          secondaryName = 'Allstat%'
+        else if(secondaryName === 'H')
+          secondaryName = 'HP%'
+        else if(secondaryName === 'D')
+          secondaryName = 'Drop'
+        else if(secondaryName === 'M')
+          secondaryName = 'Meso'
+          content += ' + ' + secondaryValue + secondaryName;
+      }
 
-                <FormControl variant="outlined">
-                    <Select 
-                        name={DTIER}
-                        id="Desiredtier dropdown" //for override css
-                        value={form[DTIER]}
-                        onChange={onItemChange}
-                    >
-                        <MenuItem value=""><em>--select--</em></MenuItem>
-                        <MenuItem value="R">Rare</MenuItem>
-                        <MenuItem value="E">Epic</MenuItem>
-                        <MenuItem value="U">Unique</MenuItem>
-                        <MenuItem value="L">Legendary</MenuItem>
-                    </Select>
-                </FormControl>
+      if(tertiaryValue !== undefined){
+        if(tertiaryName === 'S')
+          tertiaryName = 'Stat%'
+        else if(tertiaryName === 'A')
+          tertiaryName = 'Allstat%'
+        else if(tertiaryName === 'H')
+          tertiaryName = 'HP%'
+        content += ' + ' + tertiaryValue + tertiaryName; 
+      }
+  
+      return <MenuItem 
+        key = {ALine} 
+        value={ALine}
+      >
+        {content}
+      </MenuItem>
+  }) 
+        
+  const renderLineOptions = () => {
+    if(statItems.has(form[ITEM])) {
+      return renderBaseLines().concat(renderHPLines());
+    }else if(form[ITEM] === "W0" || form[ITEM] === "S0" || form[ITEM] === "S1"){
+      return renderBaseLines().concat(renderWSLines());
+    }else if(form[ITEM] === "E0"){
+      return renderBaseLines().concat(renderELines());
+    }else if(form[ITEM] === "G0"){
+      return renderBaseLines().concat(renderHPLines(), renderGLines());   
+    }else if(form[ITEM] === "A0"){
+      return renderBaseLines().concat(renderHPLines(), renderALines());   
+    } //some default value
+  }
 
-                <FormControl variant="outlined">
-                    <Select 
-                        name={LINES}
-                        id="LinesDesired dropdown" //for override css
-                        value={form[LINES]}
-                        onChange={onItemChange}
-                    >
-                        {renderLineOptions()}
-                    </Select>
-                </FormControl>
-                <input type="submit" />
-            </form>
+  const onItemChange = e => 
+      setForm({ ...form, [e.target.name]: e.target.value })
 
-            <div>
-                {results.cubeCount}
-            </div>
-        </div>
-    );
+  return (
+    <div>
+      <form onSubmit={onFormSubmit}>
+        <FormControl variant="outlined">
+          <Select 
+            name={ITEM}
+            id="Item dropdown" //for override css
+            value={form[ITEM]}
+            onChange={onItemChange}
+          >
+            <MenuItem value=""><em>--select--</em></MenuItem>
+            <MenuItem value="A0">Accessory</MenuItem>
+            <MenuItem value="C0">Belt</MenuItem>
+            <MenuItem value="P0">Bottom</MenuItem>
+            <MenuItem value="C1">Cape</MenuItem>
+            <MenuItem value="E0">Emblem</MenuItem>
+            <MenuItem value="G0">Glove</MenuItem>
+            <MenuItem value="H0">Hat</MenuItem>
+            <MenuItem value="He0">Heart</MenuItem>
+            <MenuItem value="T0">Overall</MenuItem>
+            <MenuItem value="T1">Top</MenuItem>
+            <MenuItem value="S0">Secondary</MenuItem>
+            <MenuItem value="S1">Shield</MenuItem>
+            <MenuItem value="F0">Shoes</MenuItem>
+            <MenuItem value="C2">Shoulder</MenuItem>
+            <MenuItem value="W0">Weapon</MenuItem>
+          </Select>
+      </FormControl>
+
+      <FormControl variant="outlined">
+          <Select 
+            name={CTIER}
+            id="Tier dropdown" //for override css
+            value={form[CTIER]}
+            onChange={onItemChange}
+          >
+            <MenuItem value=""><em>--select--</em></MenuItem>
+            <MenuItem value="R">Rare</MenuItem>
+            <MenuItem value="E">Epic</MenuItem>
+            <MenuItem value="U">Unique</MenuItem>
+            <MenuItem value="L">Legendary</MenuItem>
+          </Select>
+      </FormControl>
+
+      <FormControl variant="outlined">
+          <Select 
+            name={CUBE}
+            id="Cube dropdown" //for override css
+            value={form[CUBE]}
+            onChange={onItemChange}
+          >
+            <MenuItem value=""><em>--select--</em></MenuItem>
+            <MenuItem value="R">Red</MenuItem>
+            <MenuItem value="B">Black</MenuItem>
+          </Select>
+      </FormControl>
+
+      <FormControl variant="outlined">
+          <Select 
+            name={DTIER}
+            id="Desiredtier dropdown" //for override css
+            value={form[DTIER]}
+            onChange={onItemChange}
+          >
+            <MenuItem value=""><em>--select--</em></MenuItem>
+            <MenuItem value="R">Rare</MenuItem>
+            <MenuItem value="E">Epic</MenuItem>
+            <MenuItem value="U">Unique</MenuItem>
+            <MenuItem value="L">Legendary</MenuItem>
+          </Select>
+      </FormControl>
+
+      <FormControl variant="outlined">
+          <Select 
+            name={LINES}
+            id="LinesDesired dropdown" //for override css
+            value={form[LINES]}
+            onChange={onItemChange}
+          >
+            {renderLineOptions()}
+          </Select>
+        </FormControl>
+        <input type="submit" />
+      </form>
+
+      <div>
+          {results.cubeCount}
+      </div>
+    </div>
+  );
 }
 
 export default Form;
